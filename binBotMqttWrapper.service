@@ -1,0 +1,11 @@
+[Unit]
+Description=MQTT wrapper to listen to broker and insert into database
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/binBotMqttWrapper/main.py
+Restart=on-failure
+User=ubuntu
+Group=ubuntu
+
+[Install]
+WantedBy=default.target
