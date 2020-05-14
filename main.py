@@ -13,11 +13,13 @@ port = 1883
 #slackHeader = "Content-type: application/json"
 
 def post_message(data):
-    slackUrl = "https://hooks.slack.com/services/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"
+
+    slackUrl = "https://hooks.slack.com/services/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"
     slackHeader = {"Content-type": "application/json"}
     data = {"text": data["message"]}
     slackPayload = json.dumps(data)
     x = requests.post(slackUrl, data=slackPayload, headers=slackHeader)
+    print(x) 
 
 #function called when a message is recieved
 def on_message(client, userdata, message):
@@ -36,7 +38,7 @@ def insert(data, measurement):
 
     # Get the measurement
     measurement = measurement.split("/")[1]
-
+    
     if(measurement == "messages"):
         post_message(json.loads(data.decode("utf-8")))
 
