@@ -3,12 +3,23 @@ import paho.mqtt.client as paho
 from datetime import datetime
 from threading import Thread
 import json
+import requests
 
 # Define broker and port to listen to
 broker = "localhost"
 port = 1883
 
-# Function called when a message is recieved
+#slackUrl = "https://hooks.slack.com/services/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"
+#slackHeader = "Content-type: application/json"
+
+def post_message(data):
+    slackUrl = "https://hooks.slack.com/services/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"
+    slackHeader = {"Content-type": "application/json"}
+    data = {"text": data["message"]}
+    slackPayload = json.dumps(data)
+    x = requests.post(slackUrl, data=slackPayload, headers=slackHeader)
+
+#function called when a message is recieved
 def on_message(client, userdata, message):
 
     # Print data
@@ -25,6 +36,9 @@ def insert(data, measurement):
 
     # Get the measurement
     measurement = measurement.split("/")[1]
+
+    if(measurement == "messages"):
+        post_message(json.loads(data.decode("utf-8")))
 
     # Generate the json body to insert
     json_body = [
@@ -46,7 +60,7 @@ def insert(data, measurement):
     dbClient.write_points(json_body)
         
 # Connect to the database
-dbClient = InfluxDBClient(host="localhost", port=8086, database="BinBotStats")
+dbClient = InfluxDBClient(host="localhost", port=8086, database="BinBotStats", username='binbot', password='b33pb00p!!')
 
 # Create a mqtt client
 client = paho.Client("Client1")
